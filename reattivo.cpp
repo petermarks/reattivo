@@ -43,10 +43,12 @@ boolean EdgeDetector::fallingEdge(boolean v) {
   return edge;
 }
 
-BooleanSampler::BooleanSampler(boolean init) : _sample(init) {
+template<class T>
+Sampler<T>::Sampler(T init) : _sample(init) {
 }
 
-boolean BooleanSampler::sample(boolean active, boolean v) {
+template<class T>
+T Sampler<T>::sample(boolean active, T v) {
   if (active) _sample = v;
   return _sample;
 }
@@ -61,4 +63,44 @@ boolean Debouncer::debounce(unsigned long time, boolean v) {
     _sample = v;
   }
   return _sample;
+}
+
+Pulser::Pulser() {
+}
+
+boolean Pulser::pulse(unsigned long onTime, unsigned long offTime) {
+  return millis() % (onTime + offTime) < onTime;
+}
+
+Ticker::Ticker() : _prev(0) {
+}
+
+boolean Ticker::tick(unsigned long tickTime) {
+  // WARN: has instability when tickTime is varying
+  unsigned long current = millis();
+  boolean result = current % tickTime == 0 && current > _prev;
+  _prev = current;
+  return result;
+}
+
+AnalogInput::AnalogInput(int pin) : _pin(pin) {
+}
+
+int AnalogInput::read() {
+  return analogRead(_pin);
+}
+
+PWMOutput::PWMOutput(int pin) : _pin(pin) {
+}
+
+void PWMOutput::write(int v) {
+  analogWrite(_pin, v);
+}
+
+BoundedSum::BoundedSum() : _sum(0) {
+}
+
+int BoundedSum::calc(int floor, int cap, int v) {
+  _sum = min(cap, max(floor, _sum + v));
+  return _sum;
 }

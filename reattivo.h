@@ -44,14 +44,15 @@ private:
   boolean _prev;
 };
 
-class BooleanSampler 
+template<class T>
+class Sampler
 {
 public:
-  BooleanSampler(boolean init);
+  Sampler(T init);
 
-  boolean sample(boolean active, boolean v);
+  T sample(boolean active, T v);
 private:
-  boolean _sample;
+  T _sample;
 };
 
 class Debouncer
@@ -64,6 +65,54 @@ public:
 private:
   unsigned long _settleTime;
   boolean _sample;
+};
+
+class Pulser
+{
+public:
+  Pulser();
+
+  boolean pulse(unsigned long onTime, unsigned long offTime);
+};
+
+class Ticker
+{
+public:
+  Ticker();
+
+  boolean tick(unsigned long tickTime);
+private:
+  unsigned long _prev;
+};
+
+class AnalogInput
+{
+public:
+  AnalogInput(int pin);
+
+  int read();
+private:
+  int _pin;
+};
+
+class PWMOutput
+{
+public:
+  PWMOutput(int pin);
+
+  void write(int v);
+private:
+  int _pin;
+};
+
+class BoundedSum
+{
+public:
+  BoundedSum();
+
+  int calc(int floor, int cap, int v);
+private:
+  int _sum;
 };
 
 #endif
